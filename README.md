@@ -776,7 +776,11 @@ A UKDL implementation must declare which level it supports.
 
 | Document | Description |
 |----------|------------|
-| [UKDL v2.0 Standard](./UKDL-v2.0-Standard.md) | Complete language specification: lexical grammar, EBNF, 10 kinds, processing model, JSON mapping, security, conformance |
+| [Getting Started](./docs/getting-started.md) | Hands-on tutorial: write your first UKDL document from L0 to L3, with CLI verification at every step |
+| [Syntax Reference](./docs/syntax-reference.md) | Complete reference for all 10 kinds, value types, directives, expressions, attributes, and EBNF grammar |
+| [Cookbook](./docs/cookbook.md) | 12 copy-paste-ready recipes: knowledge base, API docs, meeting notes, adaptive courses, vibe coding, and more |
+| [Advanced Guide](./docs/advanced-guide.md) | L4-L5 mastery: quantum states, entanglement matrices, probability decay, pipeline orchestration, circuit breakers |
+| [UKDL v2.0 Standard](./UKDL-v2.0-Standard.md) | Formal language specification: lexical grammar, EBNF, 10 kinds, processing model, JSON mapping, security, conformance |
 | [UKDL v1.0 Specification](./UKDL-v1.0-Specification.md) | Original design document (Korean), recording the design decisions behind the three-source fusion |
 | [VS Code Extension](./packages/vscode/README.md) | Extension features, snippet reference, theme customization |
 
