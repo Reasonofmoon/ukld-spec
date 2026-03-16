@@ -1,0 +1,26 @@
+{
+  "name": "@ukdl/cli",
+  "version": "2.0.0",
+  "description": "Command-line interface for UKDL (Unified Knowledge & Dynamics Language)",
+  "type": "module",
+  "bin": {
+    "ukdl": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/index.ts"
+  },
+  "dependencies": {
+    "@ukdl/parser": "file:../parser"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0",
+    "tsx": "^4.0.0"
+  },
+  "keywords": ["ukdl", "cli", "knowledge-graph", "ai", "language"],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ukdl/ukdl-language"
+  }
+}

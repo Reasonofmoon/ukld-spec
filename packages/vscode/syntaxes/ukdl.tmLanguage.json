@@ -1,0 +1,496 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "UKDL",
+  "scopeName": "source.ukdl",
+  "patterns": [
+    { "include": "#block-comment" },
+    { "include": "#line-comment" },
+    { "include": "#node-open" },
+    { "include": "#node-close" },
+    { "include": "#directive-conditional" },
+    { "include": "#directive-for" },
+    { "include": "#directive-function" },
+    { "include": "#directive-multimodal" },
+    { "include": "#field-line" },
+    { "include": "#body-line" }
+  ],
+  "repository": {
+    "block-comment": {
+      "name": "comment.block.ukdl",
+      "begin": "\\(\\(",
+      "beginCaptures": {
+        "0": { "name": "punctuation.definition.comment.begin.ukdl" }
+      },
+      "end": "\\)\\)",
+      "endCaptures": {
+        "0": { "name": "punctuation.definition.comment.end.ukdl" }
+      }
+    },
+    "line-comment": {
+      "name": "comment.line.ukdl",
+      "begin": "%%",
+      "beginCaptures": {
+        "0": { "name": "punctuation.definition.comment.ukdl" }
+      },
+      "end": "$"
+    },
+    "node-open": {
+      "comment": "Matches :: kind id=prefix:name [attrs...]",
+      "begin": "^(::)\\s+(meta|block|entity|rel|schema|include|context|action|quantum|pipeline|[a-zA-Z_][a-zA-Z0-9_-]*)(?=\\s)",
+      "beginCaptures": {
+        "1": { "name": "keyword.control.node.ukdl" },
+        "2": { "name": "entity.name.type.kind.ukdl" }
+      },
+      "end": "$",
+      "patterns": [
+        { "include": "#node-header-attrs" }
+      ]
+    },
+    "node-close": {
+      "comment": "Matches :: on its own line",
+      "match": "^(::)\\s*$",
+      "captures": {
+        "1": { "name": "keyword.control.node.ukdl" }
+      }
+    },
+    "node-header-attrs": {
+      "patterns": [
+        {
+          "comment": "id=prefix:name",
+          "match": "\\b(id)=(([a-zA-Z_][a-zA-Z0-9_-]*):([a-zA-Z_][a-zA-Z0-9_-]*))",
+          "captures": {
+            "1": { "name": "variable.parameter.id.ukdl" },
+            "2": { "name": "entity.name.tag.reference.ukdl" },
+            "3": { "name": "support.type.prefix.ukdl" },
+            "4": { "name": "entity.name.function.id.ukdl" }
+          }
+        },
+        {
+          "comment": "from=@prefix:name or to=@prefix:name reference attrs",
+          "match": "\\b(from|to|about|entangle|depends_on|superseded_by)=(@([a-zA-Z_][a-zA-Z0-9_-]*):([a-zA-Z_][a-zA-Z0-9_.-]*))",
+          "captures": {
+            "1": { "name": "variable.parameter.attr.ukdl" },
+            "2": { "name": "entity.name.tag.reference.ukdl" },
+            "3": { "name": "support.type.prefix.ukdl" },
+            "4": { "name": "variable.other.member.ukdl" }
+          }
+        },
+        {
+          "comment": "priority=critical|high|normal|low|archive",
+          "match": "\\b(priority)=(critical|high|normal|low|archive)\\b",
+          "captures": {
+            "1": { "name": "variable.parameter.attr.ukdl" },
+            "2": { "name": "support.constant.priority.ukdl" }
+          }
+        },
+        {
+          "comment": "depth=overview|standard|detailed",
+          "match": "\\b(depth)=(overview|standard|detailed)\\b",
+          "captures": {
+            "1": { "name": "variable.parameter.attr.ukdl" },
+            "2": { "name": "support.constant.depth.ukdl" }
+          }
+        },
+        {
+          "comment": "collapse=true|false",
+          "match": "\\b(collapse)=(true|false)\\b",
+          "captures": {
+            "1": { "name": "variable.parameter.attr.ukdl" },
+            "2": { "name": "constant.language.boolean.ukdl" }
+          }
+        },
+        {
+          "comment": "type=SomeType (entity/rel/block types)",
+          "match": "\\b(type)=([a-zA-Z_][a-zA-Z0-9_-]*)",
+          "captures": {
+            "1": { "name": "variable.parameter.attr.ukdl" },
+            "2": { "name": "support.type.value.ukdl" }
+          }
+        },
+        {
+          "comment": "agent=name trigger=name",
+          "match": "\\b(agent|trigger)=([a-zA-Z_][a-zA-Z0-9_-]*)",
+          "captures": {
+            "1": { "name": "variable.parameter.attr.ukdl" },
+            "2": { "name": "string.unquoted.attr-value.ukdl" }
+          }
+        },
+        {
+          "comment": "labels.en=\"...\" multilingual labels",
+          "match": "\\b(labels\\.[a-zA-Z]+)=(\"[^\"]*\"|'[^']*')",
+          "captures": {
+            "1": { "name": "variable.parameter.attr.ukdl" },
+            "2": { "name": "string.quoted.double.ukdl" }
+          }
+        },
+        { "include": "#attr-string-value" },
+        {
+          "comment": "Generic key=value attributes",
+          "match": "\\b([a-zA-Z_][a-zA-Z0-9_-]*)=([^\\s\"']+)",
+          "captures": {
+            "1": { "name": "variable.parameter.attr.ukdl" },
+            "2": { "name": "string.unquoted.attr-value.ukdl" }
+          }
+        }
+      ]
+    },
+    "attr-string-value": {
+      "patterns": [
+        {
+          "match": "\\b([a-zA-Z_][a-zA-Z0-9_-]*)=(\"(?:[^\"\\\\]|\\\\.)*\")",
+          "captures": {
+            "1": { "name": "variable.parameter.attr.ukdl" },
+            "2": { "name": "string.quoted.double.ukdl" }
+          }
+        },
+        {
+          "match": "\\b([a-zA-Z_][a-zA-Z0-9_-]*)=('(?:[^'\\\\]|\\\\.)*')",
+          "captures": {
+            "1": { "name": "variable.parameter.attr.ukdl" },
+            "2": { "name": "string.quoted.single.ukdl" }
+          }
+        }
+      ]
+    },
+    "field-line": {
+      "comment": "Lines starting with @identifier: value",
+      "begin": "^(@)(confidence|source|summary|states|tool|trigger|goal|entangle|author|lang|version|domain|tags|ukdl_level|license|born|died|aliases|same_as|valid_from|valid_to|generated_by|verified|deprecated|superseded_by|applies_to|required_fields|optional_fields|field_types|filter|namespace|max_tokens|collapse|observe_on|decay|history|default|entangle_matrix|input|output|timeout|retry|guard|depends_on|criteria|interval|max_iterations|stages|feedback|circuit_breaker|when|[a-zA-Z_][a-zA-Z0-9_-]*)(:)",
+      "beginCaptures": {
+        "1": { "name": "punctuation.definition.variable.ukdl" },
+        "2": { "name": "variable.other.field.ukdl" },
+        "3": { "name": "punctuation.separator.colon.ukdl" }
+      },
+      "end": "$",
+      "patterns": [
+        { "include": "#field-value" }
+      ]
+    },
+    "field-value": {
+      "patterns": [
+        { "include": "#triple-quoted-string" },
+        { "include": "#double-quoted-string" },
+        { "include": "#single-quoted-string" },
+        { "include": "#array-value" },
+        { "include": "#object-value" },
+        { "include": "#display-reference" },
+        { "include": "#reference" },
+        { "include": "#number" },
+        { "include": "#boolean" },
+        { "include": "#null" },
+        { "include": "#date" },
+        { "include": "#priority-constant" }
+      ]
+    },
+    "triple-quoted-string": {
+      "name": "string.quoted.triple.ukdl",
+      "begin": "\"\"\"",
+      "beginCaptures": {
+        "0": { "name": "punctuation.definition.string.begin.ukdl" }
+      },
+      "end": "\"\"\"",
+      "endCaptures": {
+        "0": { "name": "punctuation.definition.string.end.ukdl" }
+      }
+    },
+    "double-quoted-string": {
+      "name": "string.quoted.double.ukdl",
+      "begin": "\"",
+      "beginCaptures": {
+        "0": { "name": "punctuation.definition.string.begin.ukdl" }
+      },
+      "end": "\"",
+      "endCaptures": {
+        "0": { "name": "punctuation.definition.string.end.ukdl" }
+      },
+      "patterns": [
+        {
+          "name": "constant.character.escape.ukdl",
+          "match": "\\\\."
+        }
+      ]
+    },
+    "single-quoted-string": {
+      "name": "string.quoted.single.ukdl",
+      "begin": "'",
+      "beginCaptures": {
+        "0": { "name": "punctuation.definition.string.begin.ukdl" }
+      },
+      "end": "'",
+      "endCaptures": {
+        "0": { "name": "punctuation.definition.string.end.ukdl" }
+      }
+    },
+    "array-value": {
+      "name": "meta.structure.array.ukdl",
+      "begin": "\\[",
+      "beginCaptures": {
+        "0": { "name": "punctuation.definition.array.begin.ukdl" }
+      },
+      "end": "\\]",
+      "endCaptures": {
+        "0": { "name": "punctuation.definition.array.end.ukdl" }
+      },
+      "patterns": [
+        { "include": "#field-value" },
+        { "match": ",", "name": "punctuation.separator.array.ukdl" }
+      ]
+    },
+    "object-value": {
+      "name": "meta.structure.object.ukdl",
+      "begin": "\\{",
+      "beginCaptures": {
+        "0": { "name": "punctuation.definition.object.begin.ukdl" }
+      },
+      "end": "\\}",
+      "endCaptures": {
+        "0": { "name": "punctuation.definition.object.end.ukdl" }
+      },
+      "patterns": [
+        {
+          "match": "([a-zA-Z_][a-zA-Z0-9_-]*)\\s*(:)",
+          "captures": {
+            "1": { "name": "support.type.property-name.ukdl" },
+            "2": { "name": "punctuation.separator.colon.ukdl" }
+          }
+        },
+        { "include": "#field-value" },
+        { "match": ",", "name": "punctuation.separator.array.ukdl" }
+      ]
+    },
+    "display-reference": {
+      "comment": "@{prefix:name|display text}",
+      "name": "meta.reference.display.ukdl",
+      "begin": "@\\{",
+      "beginCaptures": {
+        "0": { "name": "punctuation.definition.reference.begin.ukdl" }
+      },
+      "end": "\\}",
+      "endCaptures": {
+        "0": { "name": "punctuation.definition.reference.end.ukdl" }
+      },
+      "patterns": [
+        {
+          "match": "([a-zA-Z_][a-zA-Z0-9_-]*):([a-zA-Z_][a-zA-Z0-9_.-]*)",
+          "captures": {
+            "0": { "name": "entity.name.tag.reference.ukdl" },
+            "1": { "name": "support.type.prefix.ukdl" },
+            "2": { "name": "variable.other.member.ukdl" }
+          }
+        },
+        {
+          "begin": "\\|",
+          "beginCaptures": {
+            "0": { "name": "punctuation.separator.pipe.ukdl" }
+          },
+          "end": "(?=\\})",
+          "name": "string.other.display-text.ukdl"
+        }
+      ]
+    },
+    "reference": {
+      "comment": "@prefix:name standalone reference",
+      "match": "@([a-zA-Z_][a-zA-Z0-9_-]*):([a-zA-Z_][a-zA-Z0-9_.-]*)",
+      "name": "entity.name.tag.reference.ukdl",
+      "captures": {
+        "1": { "name": "support.type.prefix.ukdl" },
+        "2": { "name": "variable.other.member.ukdl" }
+      }
+    },
+    "number": {
+      "name": "constant.numeric.ukdl",
+      "match": "-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?\\b"
+    },
+    "boolean": {
+      "name": "constant.language.boolean.ukdl",
+      "match": "\\b(true|false)\\b"
+    },
+    "null": {
+      "name": "constant.language.null.ukdl",
+      "match": "\\bnull\\b"
+    },
+    "date": {
+      "name": "constant.other.date.ukdl",
+      "match": "\"\\d{4}-\\d{2}-\\d{2}(?:T[0-9:Z.+-]+)?\""
+    },
+    "priority-constant": {
+      "name": "support.constant.priority.ukdl",
+      "match": "\\b(critical|high|normal|low|archive)\\b"
+    },
+    "directive-conditional": {
+      "patterns": [
+        {
+          "comment": "|if: expr|",
+          "begin": "(\\|if:)\\s*",
+          "beginCaptures": {
+            "1": { "name": "keyword.control.conditional.ukdl" }
+          },
+          "end": "(\\|)\\s*$",
+          "endCaptures": {
+            "1": { "name": "keyword.control.conditional.ukdl" }
+          },
+          "name": "meta.directive.conditional.ukdl",
+          "patterns": [
+            { "include": "#expression" }
+          ]
+        },
+        {
+          "comment": "|elif: expr|",
+          "begin": "(\\|elif:)\\s*",
+          "beginCaptures": {
+            "1": { "name": "keyword.control.conditional.ukdl" }
+          },
+          "end": "(\\|)\\s*$",
+          "endCaptures": {
+            "1": { "name": "keyword.control.conditional.ukdl" }
+          },
+          "name": "meta.directive.elif.ukdl",
+          "patterns": [
+            { "include": "#expression" }
+          ]
+        },
+        {
+          "comment": "|else|",
+          "match": "\\|else\\|",
+          "name": "keyword.control.conditional.ukdl"
+        },
+        {
+          "comment": "|/if|",
+          "match": "\\|/if\\|",
+          "name": "keyword.control.conditional.ukdl"
+        }
+      ]
+    },
+    "directive-for": {
+      "patterns": [
+        {
+          "comment": "|for: var in expr|",
+          "begin": "(\\|for:)\\s*([a-zA-Z_][a-zA-Z0-9_-]*)\\s*(in)\\s*",
+          "beginCaptures": {
+            "1": { "name": "keyword.control.loop.ukdl" },
+            "2": { "name": "variable.other.loop.ukdl" },
+            "3": { "name": "keyword.operator.in.ukdl" }
+          },
+          "end": "(\\|)\\s*$",
+          "endCaptures": {
+            "1": { "name": "keyword.control.loop.ukdl" }
+          },
+          "name": "meta.directive.for.ukdl",
+          "patterns": [
+            { "include": "#reference" },
+            { "include": "#display-reference" }
+          ]
+        },
+        {
+          "comment": "|/for|",
+          "match": "\\|/for\\|",
+          "name": "keyword.control.loop.ukdl"
+        }
+      ]
+    },
+    "directive-function": {
+      "patterns": [
+        {
+          "comment": "|function: name(params)|",
+          "begin": "(\\|function:)\\s*([a-zA-Z_][a-zA-Z0-9_-]*)\\s*(\\()",
+          "beginCaptures": {
+            "1": { "name": "keyword.control.function.ukdl" },
+            "2": { "name": "entity.name.function.ukdl" },
+            "3": { "name": "punctuation.definition.parameters.begin.ukdl" }
+          },
+          "end": "(\\))\\s*(\\|)\\s*$",
+          "endCaptures": {
+            "1": { "name": "punctuation.definition.parameters.end.ukdl" },
+            "2": { "name": "keyword.control.function.ukdl" }
+          },
+          "name": "meta.directive.function.ukdl",
+          "patterns": [
+            {
+              "match": "[a-zA-Z_][a-zA-Z0-9_-]*",
+              "name": "variable.parameter.function.ukdl"
+            },
+            { "match": ",", "name": "punctuation.separator.parameters.ukdl" }
+          ]
+        },
+        {
+          "comment": "|/function|",
+          "match": "\\|/function\\|",
+          "name": "keyword.control.function.ukdl"
+        }
+      ]
+    },
+    "directive-multimodal": {
+      "patterns": [
+        {
+          "comment": "|multimodal_output|",
+          "match": "\\|multimodal_output\\|",
+          "name": "keyword.control.multimodal.ukdl"
+        },
+        {
+          "comment": "|/multimodal_output|",
+          "match": "\\|/multimodal_output\\|",
+          "name": "keyword.control.multimodal.ukdl"
+        },
+        {
+          "comment": "[text] [voice] [image] [video] [braille] modality tags",
+          "match": "^\\s*(\\[)(text|voice|image|video|braille)(\\])",
+          "captures": {
+            "1": { "name": "punctuation.definition.tag.begin.ukdl" },
+            "2": { "name": "entity.name.tag.modality.ukdl" },
+            "3": { "name": "punctuation.definition.tag.end.ukdl" }
+          }
+        }
+      ]
+    },
+    "expression": {
+      "patterns": [
+        { "include": "#display-reference" },
+        { "include": "#reference" },
+        { "include": "#double-quoted-string" },
+        { "include": "#single-quoted-string" },
+        { "include": "#number" },
+        { "include": "#boolean" },
+        { "include": "#null" },
+        {
+          "name": "keyword.operator.comparison.ukdl",
+          "match": "==|!=|>=|<=|>|<"
+        },
+        {
+          "name": "keyword.operator.logical.ukdl",
+          "match": "\\b(and|or|not|in)\\b"
+        },
+        {
+          "name": "keyword.operator.logical.ukdl",
+          "match": "\\b(beginner|intermediate|advanced|novice|expert|uninitialized)\\b"
+        }
+      ]
+    },
+    "body-line": {
+      "comment": "Body text — inline references, directives, and markdown",
+      "patterns": [
+        { "include": "#block-comment" },
+        { "include": "#line-comment" },
+        { "include": "#directive-conditional" },
+        { "include": "#directive-for" },
+        { "include": "#directive-function" },
+        { "include": "#directive-multimodal" },
+        { "include": "#display-reference" },
+        { "include": "#reference" },
+        { "include": "#inline-bold" },
+        { "include": "#inline-italic" },
+        { "include": "#inline-code" }
+      ]
+    },
+    "inline-bold": {
+      "name": "markup.bold.ukdl",
+      "match": "\\*\\*[^*]+\\*\\*"
+    },
+    "inline-italic": {
+      "name": "markup.italic.ukdl",
+      "match": "_[^_]+_|\\*[^*]+\\*"
+    },
+    "inline-code": {
+      "name": "markup.inline.raw.ukdl",
+      "match": "`[^`]+`"
+    }
+  }
+}

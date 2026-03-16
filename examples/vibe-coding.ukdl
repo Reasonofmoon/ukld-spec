@@ -1,0 +1,119 @@
+%% UKDL as Vibe Coding — Express intent, not implementation
+%% This is what makes UKDL superior: write WHAT you want, not HOW
+
+:: meta id=doc:my-app title="Build Me a Todo App" created="2026-03-16"
+@author: "vibe-coder"
+@lang: "en"
+@version: "1.0"
+@domain: "engineering.web.fullstack"
+@tags: ["vibe-coding", "todo-app", "ai-generated"]
+@ukdl_level: 3
+::
+
+%% Just describe what you want. That's it.
+
+:: block id=blk:app-vision type=definition priority=critical
+@confidence: 1.0
+
+I want a **todo app** that:
+- Lets me add, complete, and delete tasks
+- Has a clean, minimal design (think: Apple Notes meets Things 3)
+- Works offline and syncs when online
+- Supports keyboard shortcuts for power users
+- Has dark mode by default
+::
+
+:: entity id=ent:task type=Concept labels.en="Task"
+@aliases: ["Todo", "Item"]
+A single actionable item with a title, status, and optional due date.
+::
+
+:: entity id=ent:task-list type=System labels.en="Task List"
+A collection of tasks, filterable by status and sortable by date.
+::
+
+:: entity id=ent:sync-engine type=System labels.en="Sync Engine"
+Handles offline-first storage with background cloud synchronization.
+::
+
+:: rel id=rel:list-contains type=contains from=@ent:task-list to=@ent:task
+::
+
+:: rel id=rel:sync-manages type=manages from=@ent:sync-engine to=@ent:task-list
+::
+
+%% Now tell the AI what to build
+
+:: action id=act:scaffold agent=code-gen trigger="project_start"
+@tool: "project_scaffolder"
+@input: {
+  framework: "next.js",
+  styling: "tailwind",
+  database: "sqlite",
+  features: [@ent:task, @ent:task-list, @ent:sync-engine]
+}
+@output: "./todo-app/"
+
+Generate the initial project structure based on the entities above.
+::
+
+:: action id=act:implement-ui agent=frontend-ai trigger="scaffold_complete"
+@tool: "ui_generator"
+@input: {
+  design: "minimal, clean, dark-mode-first",
+  components: ["TaskItem", "TaskList", "AddTaskForm", "FilterBar"],
+  accessibility: "WCAG-AA"
+}
+@output: "./todo-app/src/components/"
+@depends_on: @act:scaffold
+
+Build the UI components. Make them beautiful.
+::
+
+:: action id=act:implement-sync agent=backend-ai trigger="scaffold_complete"
+@tool: "sync_engine_builder"
+@input: {
+  strategy: "offline-first",
+  local: "IndexedDB",
+  remote: "REST API",
+  conflict_resolution: "last-write-wins"
+}
+@output: "./todo-app/src/lib/sync/"
+@depends_on: @act:scaffold
+
+Build the offline-first sync engine.
+::
+
+:: action id=act:test agent=qa-ai trigger="implementation_complete"
+@tool: "test_generator"
+@input: {
+  coverage: "90%",
+  types: ["unit", "integration", "e2e"],
+  frameworks: ["vitest", "playwright"]
+}
+@output: "./todo-app/tests/"
+@depends_on: [@act:implement-ui, @act:implement-sync]
+
+Generate comprehensive tests. Don't ship without testing.
+::
+
+:: pipeline id=pipe:build-app
+@goal: "ship_production_todo_app"
+@criteria: ["test_coverage", "lighthouse_score", "accessibility_score"]
+@interval: "once"
+@max_iterations: 10
+@stages: [
+  {name: "scaffold", action: @act:scaffold},
+  {name: "build_ui", action: @act:implement-ui},
+  {name: "build_sync", action: @act:implement-sync},
+  {name: "test", action: @act:test}
+]
+@feedback: {
+  positive: "deploy",
+  negative: {adjust: {retry: "with_fixes"}},
+  stagnant: {escalate: "human_developer"}
+}
+@circuit_breaker: {condition: "build_failures > 3", action: "pause_and_notify"}
+
+Build, test, and ship the todo app. Don't stop until it's done.
+::

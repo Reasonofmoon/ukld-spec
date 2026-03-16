@@ -1,0 +1,31 @@
+%% My first UKDL document — as simple as writing a note
+
+:: meta id=doc:hello title="Hello, UKDL!" created="2026-03-16"
+@author: "world"
+@lang: "en"
+@version: "1.0"
+::
+
+:: block id=blk:welcome type=note
+Welcome to UKDL! This is a block — the fundamental unit of knowledge.
+
+You can write **Markdown** inside blocks. _Everything_ you know about
+Markdown works here: lists, links, code, and more.
+
+- Blocks are self-contained knowledge chunks
+- They're perfect for RAG retrieval
+- And they're as easy to write as a note
+::
+
+:: block id=blk:why-ukdl type=explanation
+## Why UKDL?
+
+Because your documents deserve to be **alive**.
+
+At Level 0, UKDL is just structured Markdown. But when you're ready,
+add entities for a knowledge graph (L1), context for AI optimization (L2),
+actions for execution (L3), quantum states for adaptation (L4),
+and pipelines for orchestration (L5).
+
+**You only pay for the complexity you use.**
+::

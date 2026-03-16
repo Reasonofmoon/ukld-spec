@@ -1,0 +1,27 @@
+{
+  "name": "ukdl-language",
+  "version": "2.0.0",
+  "description": "UKDL \u2014 Unified Knowledge & Dynamics Language: The language humans write, AI understands, and knowledge executes.",
+  "private": true,
+  "workspaces": ["packages/parser", "packages/cli", "packages/vscode"],
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "test": "npm run test --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present"
+  },
+  "keywords": [
+    "ukdl",
+    "knowledge-graph",
+    "ai",
+    "language",
+    "adaptive",
+    "vibe-coding",
+    "llm",
+    "rag"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ukdl/ukdl-language"
+  }
+}

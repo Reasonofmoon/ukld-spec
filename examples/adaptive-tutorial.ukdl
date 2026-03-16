@@ -1,0 +1,273 @@
+%% UKDL L5 Example — Adaptive Programming Tutorial
+%% Demonstrates every UKDL level in a real-world scenario
+
+:: meta id=doc:python-intro title="Learn Python: Adaptive Tutorial" created="2026-03-16"
+@author: "code-mentor"
+@lang: "en"
+@version: "2.0"
+@domain: "education.programming.python"
+@tags: ["python", "tutorial", "adaptive", "beginner-friendly"]
+@ukdl_level: 5
+@license: "CC-BY-4.0"
+::
+
+%% ═══ L1: Knowledge Graph ═══
+
+:: entity id=ent:python type=Tool labels.en="Python"
+@aliases: ["Python 3", "CPython"]
+@same_as: ["https://www.wikidata.org/wiki/Q28865"]
+A high-level, general-purpose programming language.
+::
+
+:: entity id=ent:variables type=Concept labels.en="Variables"
+Named containers for storing data values.
+::
+
+:: entity id=ent:functions type=Concept labels.en="Functions"
+Reusable blocks of code that perform specific tasks.
+::
+
+:: entity id=ent:loops type=Concept labels.en="Loops"
+Structures that repeat code based on conditions.
+::
+
+:: entity id=ent:data-types type=Concept labels.en="Data Types"
+Categories of values: strings, integers, floats, booleans, lists.
+::
+
+:: rel id=rel:python-has-variables type=has_feature from=@ent:python to=@ent:variables
+::
+
+:: rel id=rel:python-has-functions type=has_feature from=@ent:python to=@ent:functions
+::
+
+:: rel id=rel:python-has-loops type=has_feature from=@ent:python to=@ent:loops
+::
+
+:: rel id=rel:variables-use-types type=uses from=@ent:variables to=@ent:data-types
+::
+
+:: rel id=rel:functions-use-variables type=uses from=@ent:functions to=@ent:variables
+::
+
+:: rel id=rel:loops-prereq type=requires from=@ent:loops to=@ent:variables
+::
+
+%% ═══ L2: Context Control ═══
+
+:: context id=ctx:course-overview priority=critical depth=overview
+@summary: "Python tutorial covering variables, functions, and loops with adaptive difficulty."
+@collapse: false
+
+This tutorial adapts to your skill level. Complete the diagnostic quiz
+and the content will automatically adjust to match your needs.
+::
+
+:: context id=ctx:advanced-theory priority=low depth=detailed collapse=true
+@summary: "CPython internals: memory model, GIL, bytecode compilation."
+@max_tokens: 3000
+
+Python uses reference counting with a generational garbage collector.
+The GIL (Global Interpreter Lock) ensures thread safety for CPython
+but limits true parallelism for CPU-bound tasks.
+::
+
+%% ═══ L4: Quantum States ═══
+
+:: quantum id=qst:skill-level
+@states: {newcomer: 0.3, familiar: 0.5, experienced: 0.2}
+@observe_on: "diagnostic_complete"
+@entangle: @qst:content-style
+@decay: {function: "exponential", half_life: "30d"}
+@default: "familiar"
+@history: true
+
+Learner's Python proficiency. Starts as superposition,
+collapses after the diagnostic quiz.
+::
+
+:: quantum id=qst:content-style
+@states: {visual: 0.3, textual: 0.4, hands_on: 0.3}
+@observe_on: "learning_style_detected"
+@entangle: @qst:skill-level
+@entangle_matrix: {
+  newcomer-visual: 0.6, newcomer-textual: 0.1, newcomer-hands_on: 0.3,
+  familiar-visual: 0.2, familiar-textual: 0.3, familiar-hands_on: 0.5,
+  experienced-visual: 0.1, experienced-textual: 0.5, experienced-hands_on: 0.4
+}
+::
+
+%% ═══ L3: Adaptive Content ═══
+
+:: block id=blk:variables-lesson type=lesson about=@ent:variables priority=high
+@when: @qst:skill-level
+@confidence: 0.95
+
+# Variables in Python
+
+|if: @qst:skill-level == newcomer|
+Think of a variable like a **labeled box**. You put something in the box
+and give it a name so you can find it later.
+
+```python
+# Creating your first variable — it's this easy!
+name = "Alice"
+age = 25
+print(f"Hello, {name}! You are {age} years old.")
+```
+
+Try changing "Alice" to your own name and run it!
+
+|elif: @qst:skill-level == familiar|
+Variables in Python are dynamically typed — no need to declare types explicitly.
+
+```python
+# Python infers the type automatically
+message = "Hello"    # str
+count = 42           # int
+pi = 3.14159         # float
+active = True        # bool
+items = [1, 2, 3]    # list
+```
+
+Key concepts: assignment is binding, not copying. Everything is an object.
+
+|else|
+Python variables are names bound to objects in a namespace dictionary.
+Assignment creates a reference, not a copy.
+
+```python
+# Namespace exploration
+import sys
+x = [1, 2, 3]
+y = x                    # y points to same object
+print(sys.getrefcount(x))  # Reference count
+print(id(x) == id(y))      # True — same object
+```
+
+Understand `__dict__`, `locals()`, `globals()`, and the LEGB scope rule.
+|/if|
+::
+
+:: block id=blk:functions-lesson type=lesson about=@ent:functions priority=high
+@when: @qst:skill-level
+
+# Functions
+
+|if: @qst:skill-level == newcomer|
+A function is like a **recipe** — you write the steps once,
+then use it whenever you need it.
+
+```python
+def greet(name):
+    return f"Hello, {name}!"
+
+# Use the function
+message = greet("World")
+print(message)  # Hello, World!
+```
+
+|elif: @qst:skill-level == familiar|
+Functions in Python are first-class objects. They can be passed around,
+stored in variables, and returned from other functions.
+
+```python
+def make_multiplier(factor):
+    def multiply(n):
+        return n * factor
+    return multiply
+
+double = make_multiplier(2)
+triple = make_multiplier(3)
+print(double(5))   # 10
+print(triple(5))   # 15
+```
+
+|else|
+Functions are objects with `__code__`, `__closure__`, and `__defaults__` attributes.
+
+```python
+import dis
+
+def fibonacci(n, memo={}):
+    if n in memo: return memo[n]
+    if n <= 1: return n
+    memo[n] = fibonacci(n-1) + fibonacci(n-2)
+    return memo[n]
+
+dis.dis(fibonacci)  # Examine bytecode
+print(fibonacci.__code__.co_varnames)
+```
+|/if|
+::
+
+%% ═══ L3: Actions ═══
+
+:: action id=act:diagnostic agent=python-tutor trigger="tutorial_start"
+@tool: "code_skill_assessor"
+@input: {language: "python", topics: [@ent:variables, @ent:functions, @ent:loops], count: 10}
+@output: "diagnostic_result.json"
+@timeout: 60000
+@retry: {max: 2, backoff: "exponential"}
+
+Run a diagnostic quiz to assess the learner's Python skill level.
+::
+
+:: action id=act:generate-exercises agent=python-tutor trigger="lesson_complete"
+@tool: "exercise_generator"
+@input: {
+  topic: @ent:variables,
+  difficulty: @qst:skill-level,
+  style: @qst:content-style,
+  count: 3
+}
+@output: "exercises.json"
+@depends_on: @act:diagnostic
+@guard: @qst:skill-level != "uninitialized"
+
+Generate practice exercises matched to the learner's level and style.
+::
+
+:: action id=act:code-review agent=python-tutor trigger="exercise_submitted"
+@tool: "code_reviewer"
+@input: {submission: "user_code.py", expected: "solution.py"}
+@output: "feedback.json"
+@depends_on: @act:generate-exercises
+
+Review the learner's submitted code and provide feedback.
+::
+
+%% ═══ L5: Learning Pipeline ═══
+
+:: pipeline id=pipe:python-mastery
+@goal: "achieve_python_proficiency"
+@criteria: ["quiz_accuracy", "code_quality", "concept_retention", "completion_rate"]
+@interval: "every_lesson"
+@max_iterations: 100
+@stages: [
+  {name: "diagnose", action: @act:diagnostic},
+  {name: "calibrate", quantum: @qst:skill-level},
+  {name: "teach_variables", block: @blk:variables-lesson},
+  {name: "teach_functions", block: @blk:functions-lesson},
+  {name: "practice", action: @act:generate-exercises},
+  {name: "review", action: @act:code-review}
+]
+@feedback: {
+  positive: "advance_to_next_topic",
+  negative: {adjust: {difficulty: "decrease", examples: "increase", hints: "more"}},
+  stagnant: {escalate: "human_mentor"}
+}
+@circuit_breaker: {condition: "consecutive_failures > 5", action: "pause_and_notify"}
+
+Complete adaptive learning pipeline for Python mastery.
+::
+
+%% ═══ Multimodal Output ═══
+
+:: block id=blk:welcome-message type=greeting priority=critical
+
+|multimodal_output|
+  [text] Welcome to the Python Adaptive Tutorial! Your journey begins now.
+  [voice] tts("Welcome to the Python Adaptive Tutorial! Your journey begins now.", lang="en")
+|/multimodal_output|
+::

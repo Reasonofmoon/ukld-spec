@@ -1,0 +1,431 @@
+{
+  "meta node": {
+    "prefix": "meta",
+    "body": [
+      ":: meta id=doc:${1:document-name} title=\"${2:Document Title}\" created=\"${3:2026-03-16}\"",
+      "@author: \"${4:author-name}\"",
+      "@lang: \"${5:en}\"",
+      "@version: \"${6:2.0}\"",
+      "@domain: \"${7:domain.category.topic}\"",
+      "@tags: [${8:\"tag1\", \"tag2\"}]",
+      "@ukdl_level: ${9:0}",
+      "@license: \"${10:CC-BY-4.0}\"",
+      "::"
+    ],
+    "description": "UKDL meta node — document metadata (required, first node)"
+  },
+  "block node": {
+    "prefix": "block",
+    "body": [
+      ":: block id=blk:${1:block-name} type=${2:explanation} priority=${3:normal}",
+      "@confidence: ${4:0.9}",
+      "@source: \"${5:https://source.url}\"",
+      "@summary: \"${6:One-sentence summary of this block.}\"",
+      "",
+      "${7:Block body text. Write freely in Markdown. Reference entities with @ent:name.}",
+      "::"
+    ],
+    "description": "UKDL block node — core knowledge chunk"
+  },
+  "entity node": {
+    "prefix": "entity",
+    "body": [
+      ":: entity id=ent:${1:entity-name} type=${2:Concept} labels.en=\"${3:Display Name}\"",
+      "@aliases: [${4:\"Alias One\"}]",
+      "@same_as: [${5:\"https://www.wikidata.org/wiki/Q...\"}]",
+      "",
+      "${6:Brief description of this entity.}",
+      "::"
+    ],
+    "description": "UKDL entity node — knowledge graph node"
+  },
+  "person entity": {
+    "prefix": "entity-person",
+    "body": [
+      ":: entity id=ent:${1:person-name} type=Person labels.en=\"${2:Full Name}\"",
+      "@born: \"${3:YYYY-MM-DD}\"",
+      "@died: \"${4:YYYY-MM-DD}\"",
+      "@aliases: [${5:\"Alternative Name\"}]",
+      "@same_as: [\"https://www.wikidata.org/wiki/Q${6:...}\"]",
+      "",
+      "${7:Brief biography or description.}",
+      "::"
+    ],
+    "description": "UKDL entity node for a Person"
+  },
+  "rel node": {
+    "prefix": "rel",
+    "body": [
+      ":: rel id=rel:${1:relation-name} type=${2:is_a} from=@${3:ent:source} to=@${4:ent:target}",
+      "@confidence: ${5:0.9}",
+      "@source: \"${6:Provenance source}\"",
+      "",
+      "${7:Description of this relation.}",
+      "::"
+    ],
+    "description": "UKDL rel node — knowledge graph edge (relation)"
+  },
+  "schema node": {
+    "prefix": "schema",
+    "body": [
+      ":: schema id=sch:${1:schema-name}",
+      "@applies_to: {kind: \"${2:entity}\", type: \"${3:Person}\"}",
+      "@required_fields: [${4:\"born\"}]",
+      "@optional_fields: [${5:\"died\", \"aliases\", \"same_as\"}]",
+      "@field_types: {",
+      "  ${4:born}: \"${6:date}\",",
+      "  ${7:field2}: \"${8:string}\"",
+      "}",
+      "::"
+    ],
+    "description": "UKDL schema node — validation rule"
+  },
+  "include node": {
+    "prefix": "include",
+    "body": [
+      ":: include id=inc:${1:include-name} src=\"${2:./path/to/file.ukdl}\"",
+      "@filter: {kind: \"${3:block}\", priority: [\"${4:high}\", \"${5:critical}\"]}",
+      "@namespace: \"${6:ns}\"",
+      "::"
+    ],
+    "description": "UKDL include node — external file inclusion"
+  },
+  "context node": {
+    "prefix": "context",
+    "body": [
+      ":: context id=ctx:${1:context-name} priority=${2:high} depth=${3:standard}",
+      "@summary: \"${4:Compressed summary for token-budget scenarios.}\"",
+      "@collapse: ${5:false}",
+      "@max_tokens: ${6:500}",
+      "",
+      "${7:Context content. This is included or collapsed based on token budget priority.}",
+      "::"
+    ],
+    "description": "UKDL context node — LLM context window optimization"
+  },
+  "action node": {
+    "prefix": "action",
+    "body": [
+      ":: action id=act:${1:action-name} agent=${2:ai-agent} trigger=\"${3:event_name}\"",
+      "@tool: \"${4:tool_name}\"",
+      "@input: {",
+      "  ${5:param1}: ${6:@ent:reference},",
+      "  ${7:param2}: ${8:\"value\"}",
+      "}",
+      "@output: \"${9:output_file.json}\"",
+      "@timeout: ${10:30000}",
+      "@retry: {max: ${11:3}, backoff: \"${12:exponential}\"}",
+      "@depends_on: @act:${13:prerequisite}",
+      "@guard: ${14:@qst:state != \"uninitialized\"}",
+      "",
+      "${15:Description of what this action does.}",
+      "::"
+    ],
+    "description": "UKDL action node — AI agent execution directive"
+  },
+  "quantum node": {
+    "prefix": "quantum",
+    "body": [
+      ":: quantum id=qst:${1:variable-name}",
+      "@states: {${2:state_a}: ${3:0.5}, ${4:state_b}: ${5:0.5}}",
+      "@observe_on: \"${6:observation_event}\"",
+      "@entangle: @qst:${7:related-variable}",
+      "@decay: {function: \"${8:exponential}\", half_life: \"${9:7d}\"}",
+      "@default: \"${10:state_a}\"",
+      "@history: true",
+      "",
+      "${11:Description of what this quantum state represents.}",
+      "::"
+    ],
+    "description": "UKDL quantum node — probabilistic state variable"
+  },
+  "quantum with entanglement matrix": {
+    "prefix": "quantum-entangled",
+    "body": [
+      ":: quantum id=qst:${1:variable-name}",
+      "@states: {${2:low}: ${3:0.33}, ${4:medium}: ${5:0.34}, ${6:high}: ${7:0.33}}",
+      "@observe_on: \"${8:observation_event}\"",
+      "@entangle: @qst:${9:other-variable}",
+      "@entangle_matrix: {",
+      "  ${2}-${10:a}: ${11:0.7}, ${2}-${12:b}: ${13:0.2}, ${2}-${14:c}: ${15:0.1},",
+      "  ${4}-${10:a}: ${16:0.3}, ${4}-${12:b}: ${17:0.5}, ${4}-${14:c}: ${18:0.2},",
+      "  ${6}-${10:a}: ${19:0.0}, ${6}-${12:b}: ${20:0.3}, ${6}-${14:c}: ${21:0.7}",
+      "}",
+      "@default: \"${22:medium}\"",
+      "@history: true",
+      "::"
+    ],
+    "description": "UKDL quantum node with full entanglement matrix"
+  },
+  "pipeline node": {
+    "prefix": "pipeline",
+    "body": [
+      ":: pipeline id=pipe:${1:pipeline-name}",
+      "@goal: \"${2:maximize_outcome}\"",
+      "@criteria: [\"${3:metric_1}\", \"${4:metric_2}\"]",
+      "@interval: \"${5:every_session}\"",
+      "@max_iterations: ${6:50}",
+      "@stages: [",
+      "  {name: \"${7:stage_1}\", action: @act:${8:action-one}},",
+      "  {name: \"${9:stage_2}\", quantum: @qst:${10:state-variable}},",
+      "  {name: \"${11:stage_3}\", block: @blk:${12:content-block}}",
+      "]",
+      "@feedback: {",
+      "  positive: \"${13:advance_difficulty}\",",
+      "  negative: {adjust: {${14:param}: \"${15:decrease}\"}},",
+      "  stagnant: {escalate: \"${16:human_review}\"}",
+      "}",
+      "@circuit_breaker: {condition: \"consecutive_failures > ${17:3}\", action: \"${18:pause_and_notify}\"}",
+      "",
+      "${19:Description of this pipeline's purpose.}",
+      "::"
+    ],
+    "description": "UKDL pipeline node — self-optimizing execution pipeline"
+  },
+  "if conditional": {
+    "prefix": "if",
+    "body": [
+      "|if: @${1:qst:variable} == ${2:value}|",
+      "${3:Content when condition is true.}",
+      "|elif: @${1:qst:variable} == ${4:other-value}|",
+      "${5:Content for elif branch.}",
+      "|else|",
+      "${6:Default content.}",
+      "|/if|"
+    ],
+    "description": "UKDL conditional block |if:| ... |/if|"
+  },
+  "if simple": {
+    "prefix": "ifs",
+    "body": [
+      "|if: @${1:qst:variable} == ${2:value}|",
+      "${3:Content when condition is true.}",
+      "|/if|"
+    ],
+    "description": "UKDL simple conditional |if:| ... |/if|"
+  },
+  "for loop": {
+    "prefix": "for",
+    "body": [
+      "|for: ${1:item} in @${2:pipe:collection.items}|",
+      "  ${3:Content for each @{${1:item}.field|item}.}",
+      "|/for|"
+    ],
+    "description": "UKDL loop |for:| ... |/for|"
+  },
+  "multimodal output": {
+    "prefix": "multimodal",
+    "body": [
+      "|multimodal_output|",
+      "  [text] ${1:Text version of the content.}",
+      "  [voice] tts(\"${2:Spoken version.}\", lang=\"${3:en}\")",
+      "  [image] render(@${4:ent:image-entity})",
+      "|/multimodal_output|"
+    ],
+    "description": "UKDL multimodal output block"
+  },
+  "function definition": {
+    "prefix": "function",
+    "body": [
+      "|function: ${1:function_name}(${2:param1}, ${3:param2})|",
+      "  |if: @${2:param1} == ${4:value}|",
+      "    ${5:Content for condition.}",
+      "  |else|",
+      "    ${6:Default content.}",
+      "  |/if|",
+      "|/function|"
+    ],
+    "description": "UKDL function definition"
+  },
+  "inline reference": {
+    "prefix": "ref",
+    "body": "@${1:ent}:${2:entity-name}",
+    "description": "UKDL inline reference @prefix:name"
+  },
+  "display reference": {
+    "prefix": "dref",
+    "body": "@{${1:ent}:${2:entity-name}|${3:Display Text}}",
+    "description": "UKDL display reference @{prefix:name|Display Text}"
+  },
+  "L0 document template": {
+    "prefix": "l0",
+    "body": [
+      "%% UKDL v2.0 — ${1:Document Title}",
+      "",
+      ":: meta id=doc:${2:document-name} title=\"${1:Document Title}\" created=\"${3:2026-03-16}\"",
+      "@author: \"${4:author-name}\"",
+      "@lang: \"en\"",
+      "@version: \"2.0\"",
+      "@domain: \"${5:domain.category}\"",
+      "@tags: [\"${6:tag}\"]",
+      "@ukdl_level: 0",
+      "@license: \"CC-BY-4.0\"",
+      "::",
+      "",
+      ":: block id=blk:${7:intro} type=explanation priority=high",
+      "@confidence: ${8:0.9}",
+      "@summary: \"${9:Introduction to the topic.}\"",
+      "",
+      "${10:Write your content here. Markdown formatting is fully supported.}",
+      "::",
+      ""
+    ],
+    "description": "Complete L0 UKDL document (pure blocks)"
+  },
+  "L1 document template": {
+    "prefix": "l1",
+    "body": [
+      "%% UKDL v2.0 — ${1:Document Title} (L1: Semantic)",
+      "",
+      ":: meta id=doc:${2:document-name} title=\"${1:Document Title}\" created=\"${3:2026-03-16}\"",
+      "@author: \"${4:author-name}\"",
+      "@lang: \"en\"",
+      "@version: \"2.0\"",
+      "@domain: \"${5:domain.category}\"",
+      "@tags: [\"${6:tag}\"]",
+      "@ukdl_level: 1",
+      "@license: \"CC-BY-4.0\"",
+      "::",
+      "",
+      "%% ═══ L1: Knowledge Graph ═══",
+      "",
+      ":: entity id=ent:${7:entity-name} type=${8:Concept} labels.en=\"${9:Entity Name}\"",
+      "@aliases: [\"${10:Alias}\"]",
+      "::",
+      "",
+      ":: entity id=ent:${11:entity2-name} type=${12:Concept} labels.en=\"${13:Entity 2 Name}\"",
+      "::",
+      "",
+      ":: rel id=rel:${14:relation-name} type=${15:is_a} from=@ent:${7:entity-name} to=@ent:${11:entity2-name}",
+      "@confidence: 0.9",
+      "@source: \"${16:Source}\"",
+      "::",
+      "",
+      ":: block id=blk:${17:content} type=explanation about=@ent:${7:entity-name} priority=high",
+      "@summary: \"${18:Summary of content.}\"",
+      "",
+      "${19:Content body referencing @{ent:${7:entity-name}|the entity}.}",
+      "::",
+      ""
+    ],
+    "description": "Complete L1 UKDL document (semantic / knowledge graph)"
+  },
+  "L3 document template": {
+    "prefix": "l3",
+    "body": [
+      "%% UKDL v2.0 — ${1:Document Title} (L3: Executable)",
+      "",
+      ":: meta id=doc:${2:document-name} title=\"${1:Document Title}\" created=\"${3:2026-03-16}\"",
+      "@author: \"${4:author-name}\"",
+      "@lang: \"en\"",
+      "@version: \"2.0\"",
+      "@ukdl_level: 3",
+      "::",
+      "",
+      ":: entity id=ent:${5:entity-name} type=Concept labels.en=\"${6:Entity}\"",
+      "::",
+      "",
+      ":: context id=ctx:overview priority=critical depth=overview",
+      "@summary: \"${7:One-line overview.}\"",
+      "",
+      "${8:Overview content.}",
+      "::",
+      "",
+      ":: action id=act:${9:action-name} agent=${10:ai-agent} trigger=\"${11:event}\"",
+      "@tool: \"${12:tool_name}\"",
+      "@input: {topic: @ent:${5:entity-name}, count: ${13:5}}",
+      "@output: \"${14:result.json}\"",
+      "@timeout: 30000",
+      "::",
+      ""
+    ],
+    "description": "Complete L3 UKDL document (executable with actions)"
+  },
+  "L5 document template": {
+    "prefix": "l5",
+    "body": [
+      "%% UKDL v2.0 — ${1:Document Title} (L5: Orchestrated)",
+      "",
+      ":: meta id=doc:${2:document-name} title=\"${1:Document Title}\" created=\"${3:2026-03-16}\"",
+      "@author: \"${4:author-name}\"",
+      "@lang: \"en\"",
+      "@version: \"2.0\"",
+      "@ukdl_level: 5",
+      "@license: \"CC-BY-4.0\"",
+      "::",
+      "",
+      "%% ═══ L1: Knowledge Graph ═══",
+      "",
+      ":: entity id=ent:${5:main-concept} type=Concept labels.en=\"${6:Main Concept}\"",
+      "::",
+      "",
+      "%% ═══ L2: Context Control ═══",
+      "",
+      ":: context id=ctx:overview priority=critical depth=overview",
+      "@summary: \"${7:Core overview summary.}\"",
+      "",
+      "${8:Overview of the main concept.}",
+      "::",
+      "",
+      ":: context id=ctx:detail priority=low depth=detailed collapse=true",
+      "@summary: \"${9:Detailed explanation summary.}\"",
+      "@max_tokens: 2000",
+      "",
+      "${10:Detailed content that collapses when tokens are scarce.}",
+      "::",
+      "",
+      "%% ═══ L4: Quantum States ═══",
+      "",
+      ":: quantum id=qst:${11:state-name}",
+      "@states: {${12:beginner}: 0.4, ${13:intermediate}: 0.4, ${14:advanced}: 0.2}",
+      "@observe_on: \"${15:assessment_complete}\"",
+      "@default: \"${13:intermediate}\"",
+      "@history: true",
+      "::",
+      "",
+      "%% ═══ L3: Adaptive Content ═══",
+      "",
+      ":: block id=blk:${16:adaptive-content} type=lesson about=@ent:${5:main-concept} priority=high",
+      "",
+      "|if: @qst:${11:state-name} == ${12:beginner}|",
+      "${17:Simple explanation for beginners.}",
+      "|elif: @qst:${11:state-name} == ${13:intermediate}|",
+      "${18:Standard explanation.}",
+      "|else|",
+      "${19:Advanced explanation.}",
+      "|/if|",
+      "::",
+      "",
+      "%% ═══ L3: Actions ═══",
+      "",
+      ":: action id=act:${20:assess} agent=${21:ai-agent} trigger=\"${22:module_start}\"",
+      "@tool: \"${23:assessment_tool}\"",
+      "@input: {topic: @ent:${5:main-concept}, count: 5}",
+      "@output: \"assessment_result.json\"",
+      "@timeout: 30000",
+      "::",
+      "",
+      "%% ═══ L5: Pipeline ═══",
+      "",
+      ":: pipeline id=pipe:${24:learning-pipeline}",
+      "@goal: \"${25:maximize_comprehension}\"",
+      "@criteria: [\"${26:accuracy}\", \"${27:retention}\"]",
+      "@interval: \"every_session\"",
+      "@max_iterations: 50",
+      "@stages: [",
+      "  {name: \"assess\", action: @act:${20:assess}},",
+      "  {name: \"classify\", quantum: @qst:${11:state-name}},",
+      "  {name: \"deliver\", block: @blk:${16:adaptive-content}}",
+      "]",
+      "@feedback: {",
+      "  positive: \"advance_difficulty\",",
+      "  negative: {adjust: {depth: \"decrease\"}},",
+      "  stagnant: {escalate: \"human_review\"}",
+      "}",
+      "@circuit_breaker: {condition: \"consecutive_failures > 3\", action: \"pause_and_notify\"}",
+      "::",
+      ""
+    ],
+    "description": "Complete L5 UKDL document (full orchestrated stack)"
+  }
+}

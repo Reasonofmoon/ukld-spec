@@ -1,0 +1,69 @@
+%% UKDL L1 Example — Building a Knowledge Graph
+
+:: meta id=doc:solar-system title="The Solar System" created="2026-03-16"
+@author: "astronomer"
+@lang: "en"
+@version: "1.0"
+@domain: "astronomy.solar-system"
+@tags: ["space", "planets", "science"]
+::
+
+%% ═══ Entities ═══
+
+:: entity id=ent:sun type=System labels.en="The Sun"
+@aliases: ["Sol"]
+The star at the center of our solar system.
+::
+
+:: entity id=ent:earth type=Place labels.en="Earth"
+@aliases: ["Terra", "The Blue Planet"]
+Third planet from the Sun. The only known planet with life.
+::
+
+:: entity id=ent:mars type=Place labels.en="Mars"
+@aliases: ["The Red Planet"]
+Fourth planet from the Sun. Target for human exploration.
+::
+
+:: entity id=ent:moon type=Place labels.en="The Moon"
+@aliases: ["Luna"]
+Earth's only natural satellite.
+::
+
+:: entity id=ent:gravity type=Concept labels.en="Gravity"
+The force that holds the solar system together.
+::
+
+%% ═══ Relations ═══
+
+:: rel id=rel:earth-orbits-sun type=orbits from=@ent:earth to=@ent:sun
+@confidence: 1.0
+Earth orbits the Sun once every 365.25 days.
+::
+
+:: rel id=rel:mars-orbits-sun type=orbits from=@ent:mars to=@ent:sun
+@confidence: 1.0
+Mars orbits the Sun once every 687 days.
+::
+
+:: rel id=rel:moon-orbits-earth type=orbits from=@ent:moon to=@ent:earth
+@confidence: 1.0
+The Moon orbits Earth once every 27.3 days.
+::
+
+:: rel id=rel:gravity-governs type=governs from=@ent:gravity to=@ent:sun
+@source: "Newton's Law of Universal Gravitation"
+Gravity is the force that maintains all orbits in the solar system.
+::
+
+%% ═══ Content Blocks ═══
+
+:: block id=blk:overview type=explanation about=@ent:sun priority=high
+@summary: "The solar system contains 8 planets orbiting the Sun."
+
+Our @{ent:sun|Solar System} is held together by @{ent:gravity|gravitational force}.
+@{ent:earth|Earth} and @{ent:mars|Mars} are neighboring rocky planets, both
+orbiting the @{ent:sun|Sun}.
+
+The @{ent:moon|Moon} orbits Earth and has been visited by humans since 1969.
+::

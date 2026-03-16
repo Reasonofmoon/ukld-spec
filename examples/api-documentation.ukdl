@@ -1,0 +1,147 @@
+%% UKDL for API Documentation — Better than OpenAPI for humans
+
+:: meta id=doc:users-api title="Users API" created="2026-03-16"
+@author: "api-team"
+@lang: "en"
+@version: "3.0"
+@domain: "engineering.api.users"
+@tags: ["api", "rest", "users", "authentication"]
+@ukdl_level: 2
+::
+
+:: entity id=ent:user type=System labels.en="User"
+@aliases: ["Account", "Member"]
+A registered user of the platform.
+::
+
+:: entity id=ent:auth-token type=Concept labels.en="Auth Token"
+@aliases: ["JWT", "Bearer Token"]
+A JSON Web Token used for authentication.
+::
+
+:: schema id=sch:user-object
+@applies_to: {kind: "entity", type: "System"}
+@required_fields: ["id", "email", "created_at"]
+@optional_fields: ["name", "avatar_url", "role"]
+@field_types: {
+  id: "string(uuid)",
+  email: "string(email)",
+  name: "string",
+  avatar_url: "string(uri)",
+  role: "enum(admin, member, viewer)",
+  created_at: "date"
+}
+::
+
+:: context id=ctx:api-overview priority=critical depth=overview
+@summary: "RESTful Users API with JWT authentication. Base URL: /api/v3/users"
+
+## Base URL
+`https://api.example.com/v3/users`
+
+## Authentication
+All endpoints require a Bearer token in the Authorization header.
+::
+
+:: block id=blk:create-user type=definition priority=high
+@confidence: 1.0
+@tags: ["POST", "create"]
+
+## POST /api/v3/users
+
+Create a new user account.
+
+**Request:**
+```json
+{
+  "email": "alice@example.com",
+  "name": "Alice",
+  "password": "secure-password-123"
+}
+```
+
+**Response (201 Created):**
+```json
+{
+  "id": "550e8400-e29b-41d4-a716-446655440000",
+  "email": "alice@example.com",
+  "name": "Alice",
+  "role": "member",
+  "created_at": "2026-03-16T10:30:00Z"
+}
+```
+
+**Errors:**
+- `400` — Invalid email format or password too short
+- `409` — Email already registered
+::
+
+:: block id=blk:get-user type=definition priority=high
+@tags: ["GET", "read"]
+
+## GET /api/v3/users/:id
+
+Retrieve a user by ID.
+
+**Response (200 OK):**
+```json
+{
+  "id": "550e8400-e29b-41d4-a716-446655440000",
+  "email": "alice@example.com",
+  "name": "Alice",
+  "role": "member",
+  "created_at": "2026-03-16T10:30:00Z"
+}
+```
+
+**Errors:**
+- `401` — Missing or invalid auth token
+- `404` — User not found
+::
+
+:: block id=blk:list-users type=definition priority=normal
+@tags: ["GET", "list"]
+
+## GET /api/v3/users
+
+List all users with pagination.
+
+**Query Parameters:**
+- `page` (int, default: 1)
+- `per_page` (int, default: 20, max: 100)
+- `role` (string, optional) — Filter by role
+
+**Response (200 OK):**
+```json
+{
+  "data": [...],
+  "pagination": {
+    "page": 1,
+    "per_page": 20,
+    "total": 142,
+    "total_pages": 8
+  }
+}
+```
+::
+
+:: context id=ctx:rate-limits priority=normal depth=standard collapse=true
+@summary: "Rate limits: 100 req/min for standard, 1000 req/min for premium."
+
+## Rate Limiting
+
+| Plan     | Requests/min | Burst |
+|----------|-------------|-------|
+| Free     | 30          | 50    |
+| Standard | 100         | 200   |
+| Premium  | 1000        | 2000  |
+
+Rate limit headers are included in every response:
+- `X-RateLimit-Limit`: Maximum requests per window
+- `X-RateLimit-Remaining`: Requests remaining
+- `X-RateLimit-Reset`: Unix timestamp when the window resets
+::
+
+:: rel id=rel:user-has-token type=authenticates_with from=@ent:user to=@ent:auth-token
+Users authenticate using JWT tokens obtained via the login endpoint.
+::
