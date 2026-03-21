@@ -1,0 +1,285 @@
+%% UKDL L3 Example — Korean CSAT English Exam Publishing
+%% Demonstrates structured exam passage content for automated publishing
+
+:: meta id=doc:csat-english-2024 title="수능 영어 독해 — 고난도 3점 유형" created="2026-03-21"
+@author: "educat-pipeline"
+@lang: "ko-KR"
+@version: "2.0"
+@domain: "education.english.csat"
+@tags: ["수능", "영어", "독해", "고난도", "3점"]
+@ukdl_level: 3
+@license: "CC-BY-NC-4.0"
+@audience: "high-school-senior"
+@publisher: "EduCaT"
+::
+
+%% ═══ L1: Exam Domain Ontology ═══
+
+:: entity id=ent:csat type=System labels.en="CSAT English" labels.ko="수능 영어"
+@aliases: ["수능특강", "수능완성", "College Scholastic Ability Test"]
+The standardized Korean college entrance English exam testing reading comprehension,
+grammar, vocabulary, and logical reasoning across 45 questions in 70 minutes.
+::
+
+:: entity id=ent:passage type=Concept labels.en="Reading Passage" labels.ko="독해 지문"
+@aliases: ["text", "지문", "reading text"]
+The core content unit of a CSAT English question — a 150-300 word English paragraph
+that students must analyze for meaning, structure, and linguistic features.
+::
+
+:: entity id=ent:question-type-topic type=Concept labels.en="Topic Inference" labels.ko="글의 주제"
+@aliases: ["주제 추론", "main topic"]
+@category_id: "cat_01"
+Identify the central topic or thesis of the passage.
+::
+
+:: entity id=ent:question-type-implication type=Concept labels.en="Implication Inference" labels.ko="함축 의미 추론"
+@aliases: ["함의추론", "implied meaning"]
+@category_id: "cat_02"
+Infer the implied or deeper meaning beyond the literal text.
+::
+
+:: entity id=ent:question-type-grammar type=Concept labels.en="Grammar Judgment" labels.ko="어법"
+@aliases: ["어법 판단", "grammaticality"]
+@category_id: "cat_03"
+Judge grammatical correctness of underlined expressions in context.
+::
+
+:: entity id=ent:question-type-vocabulary type=Concept labels.en="Vocabulary" labels.ko="어휘"
+@aliases: ["어휘 적절성", "word choice"]
+@category_id: "cat_04"
+Select the contextually appropriate vocabulary item.
+::
+
+:: entity id=ent:question-type-blank type=Concept labels.en="Blank Completion" labels.ko="빈칸 추론"
+@aliases: ["빈칸 완성", "fill-in-the-blank"]
+@category_id: "cat_05"
+Complete the blank with the most logically fitting phrase or sentence.
+::
+
+:: entity id=ent:question-type-order type=Concept labels.en="Sentence Ordering" labels.ko="글의 순서"
+@aliases: ["순서 맞추기", "text ordering"]
+@category_id: "cat_07"
+Arrange given paragraphs in the correct logical order.
+::
+
+:: entity id=ent:question-type-insertion type=Concept labels.en="Sentence Insertion" labels.ko="문장 삽입"
+@aliases: ["문장 넣기", "insert sentence"]
+@category_id: "cat_08"
+Determine the correct position for a given sentence within the passage.
+::
+
+:: entity id=ent:question-type-summary type=Concept labels.en="Summary Completion" labels.ko="요약문 완성"
+@aliases: ["요약", "summarize"]
+@category_id: "cat_09"
+Complete a summary statement with appropriate paired words.
+::
+
+:: entity id=ent:worksheet type=Concept labels.en="Worksheet" labels.ko="워크시트"
+@aliases: ["학습지", "활동지"]
+Published output format: student worksheet or teacher guide.
+::
+
+:: entity id=ent:teacher-guide type=Concept labels.en="Teacher Guide" labels.ko="교사용 참고서"
+@aliases: ["교안", "수업 가이드"]
+Detailed analysis document for instructors with scaffolding strategies.
+::
+
+%% ═══ Relations ═══
+
+:: rel id=rel:csat-has-passage type=has_feature from=@ent:csat to=@ent:passage ::
+:: rel id=rel:passage-has-topic type=has_feature from=@ent:passage to=@ent:question-type-topic ::
+:: rel id=rel:passage-has-blank type=has_feature from=@ent:passage to=@ent:question-type-blank ::
+:: rel id=rel:passage-has-order type=has_feature from=@ent:passage to=@ent:question-type-order ::
+:: rel id=rel:passage-has-insertion type=has_feature from=@ent:passage to=@ent:question-type-insertion ::
+:: rel id=rel:csat-produces-worksheet type=produces from=@ent:csat to=@ent:worksheet ::
+:: rel id=rel:csat-produces-guide type=produces from=@ent:csat to=@ent:teacher-guide ::
+:: rel id=rel:worksheet-requires-passage type=requires from=@ent:worksheet to=@ent:passage ::
+
+%% ═══ L0: Content Blocks — Exam Passages ═══
+
+:: block id=blk:Q001 type=exercise about=@ent:question-type-topic priority=high
+@confidence: 0.95
+@source: "2024 수능 23번"
+@q_type: "multiple_choice"
+@category_id: "cat_01"
+@category_name: "01 글의 주제"
+@major_section: "Ⅰ 고난도‧3점 유형"
+@prompt: "다음 글의 주제로 가장 적절한 것은?"
+@answer: 2
+@options: [
+  "① necessity of calculating the market values of ecosystem services",
+  "② significance of weighing forest resources' non-market values",
+  "③ impact of using forest resources to maximize financial benefits",
+  "④ merits of balancing forests' market and non-market values",
+  "⑤ ways of increasing the efficiency of managing natural resources"
+]
+@vocabulary: [
+  {word: "exploitation", meaning: "이용"},
+  {word: "timber", meaning: "목재"}
+]
+@cognitive_level: "understand"
+@tags: ["Ⅰ", "01 글의 주제", "2024", "수능", "23번"]
+
+Managers of natural resources typically face market incentives that provide
+financial rewards for exploitation. For example, owners of forest lands have
+a market incentive to cut down trees rather than manage the forest for carbon
+capture, wildlife habitat, flood protection, and other ecosystem services.
+These services provide the owner with no financial benefits, and thus are
+unlikely to influence management decisions. But the economic benefits provided
+by these services, based on their non-market values, may exceed the economic
+value of the timber.
+::
+
+:: block id=blk:Q002 type=exercise about=@ent:question-type-implication priority=high
+@confidence: 0.95
+@source: "2024 수능 21번"
+@q_type: "multiple_choice"
+@category_id: "cat_02"
+@category_name: "02 함축 의미 추론"
+@major_section: "Ⅰ 고난도‧3점 유형"
+@prompt: "밑줄 친 부분이 의미하는 바로 가장 적절한 것은?"
+@answer: 3
+@options: [
+  "① focusing on how morality is derived from rational thinking",
+  "② examining what causes people to exercise moral courage",
+  "③ understanding why virtues exist as correctives for human flaws",
+  "④ analyzing how self-reflection leads to personal virtue",
+  "⑤ exploring the relationship between temptation and spiritual growth"
+]
+@vocabulary: [
+  {word: "corrective", meaning: "교정하는"},
+  {word: "temptation", meaning: "유혹"}
+]
+@cognitive_level: "analyze"
+@tags: ["Ⅰ", "02 함축 의미 추론", "2024", "수능", "21번"]
+
+(Passage content would be inserted here from the source data.)
+::
+
+%% ═══ L1: Schema — Exam Question Validation ═══
+
+:: schema id=sch:csat-question applies_to="block"
+@required_fields: ["source", "q_type", "category_id", "prompt", "answer"]
+@field_types: {
+  source: "string",
+  q_type: {enum: ["multiple_choice", "short_answer", "essay"]},
+  category_id: "string",
+  prompt: "string",
+  answer: "number",
+  options: "array",
+  vocabulary: "array",
+  cognitive_level: {enum: ["remember", "understand", "apply", "analyze", "evaluate", "create"]},
+  tags: "array"
+}
+Validation rules for CSAT exam question blocks.
+Ensures every question has required metadata for publishing pipeline.
+::
+
+%% ═══ L2: Context — Publishing Window ═══
+
+:: context id=ctx:exam-overview priority=critical depth=overview
+@summary: "241 CSAT English passages organized into 10 categories across high-difficulty 3-point types and mock exams."
+@collapse: false
+
+This document contains structured exam content from EduCaT's 241 passage dataset.
+Each block represents one exam question with full passage text, answer options,
+correct answer, vocabulary notes, and cognitive level classification.
+::
+
+:: context id=ctx:vocabulary-bank priority=high depth=detailed collapse=true
+@summary: "Aggregated vocabulary items extracted from all passages for flashcard and gap-fill generation."
+@max_tokens: 5000
+
+Vocabulary items are embedded in each question block's @vocabulary field.
+Use this context to build cross-passage vocabulary worksheets, frequency analyses,
+and spaced-repetition card decks.
+::
+
+:: context id=ctx:publishing-metadata priority=normal depth=overview collapse=true
+@summary: "Template selection, layout preferences, and output format specifications for the publishing pipeline."
+@max_tokens: 2000
+
+Publishing targets:
+- Student worksheet (A4, print-optimized)
+- Teacher guide (A4, 13-section analysis)
+- Workbook bundle (ZIP: student + teacher + manifest)
+- Digital interactive (micro-learning cards + quiz)
+::
+
+%% ═══ L3: Actions — Publishing Pipeline ═══
+
+:: action id=act:generate-worksheet agent=educat-publisher trigger="passage_selected"
+@tool: "gemini_generate"
+@input: {
+  passages: "@blk:Q001",
+  exam_types: ["purpose", "blank", "vocabulary"],
+  output_format: "student_worksheet",
+  template: "micro-learning"
+}
+@output: "worksheet.html"
+@timeout: 30000
+@retry: {max: 2, backoff: "exponential"}
+
+Generate a student worksheet from the selected passage using Gemini AI.
+The worksheet includes gap-fill exercises, vocabulary matching, and comprehension checks.
+::
+
+:: action id=act:generate-teacher-guide agent=educat-publisher trigger="worksheet_complete"
+@tool: "gemini_generate"
+@input: {
+  passages: "@blk:Q001",
+  analysis_depth: "full",
+  sections: 13,
+  output_format: "teacher_guide_html"
+}
+@output: "teacher-guide.html"
+@depends_on: @act:generate-worksheet
+@timeout: 60000
+
+Generate a 13-section teacher guide with discourse analysis, scaffolding strategies,
+Bloom's taxonomy alignment, and formative assessment questions.
+::
+
+:: action id=act:design-layout agent=stitch-mcp trigger="content_ready"
+@tool: "textbook_handoff"
+@input: {
+  projectId: "STITCH_PROJECT_ID",
+  templateId: "micro-learning",
+  includeHtml: true,
+  includeImages: true
+}
+@output: "design-package.json"
+@depends_on: @act:generate-worksheet
+
+Run the stitch-mcp textbook_handoff to generate design-system-aligned layout
+with route blueprints and component inventories for Pencil refinement.
+::
+
+:: action id=act:refine-pencil agent=pencil-mcp trigger="design_ready"
+@tool: "batch_design"
+@input: {
+  source: "design-package.json",
+  operations: "insert_components",
+  style_guide: "educat-warm-pastel"
+}
+@output: "refined.pen"
+@depends_on: @act:design-layout
+
+Refine the Stitch design output in Pencil: promote reusable components,
+add interaction states, apply responsive rules, and export final .pen file.
+::
+
+:: action id=act:export-publish agent=educat-publisher trigger="design_finalized"
+@tool: "export_bundle"
+@input: {
+  formats: ["pdf", "html", "zip"],
+  target: "tpt",
+  include_manifest: true
+}
+@output: "bundle/"
+@depends_on: @act:refine-pencil
+
+Package final output for TpT distribution:
+PDF (print), HTML (web preview), ZIP (complete workbook bundle with manifest).
+::
