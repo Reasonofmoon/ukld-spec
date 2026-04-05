@@ -1,0 +1,120 @@
+%% UKDL v2.0 — Gido Coding: Payment Service MVP
+:: meta id=doc:payment-service title="Payment System MVP - Gido Coding Example" created="2026-03-17"
+@author: "gido-architect"
+@lang: "ko"
+@version: "1.0"
+@domain: "commerce.billing"
+@tags: ["payment", "stripe", "gido-coding", "fuseki"]
+@ukdl_level: 5
+@license: "CC-BY-4.0"
+::
+
+%% ═══ Phase 1: 포석 (Fuseki) - L1 Knowledge Graph ═══
+:: entity id=ent:payment type=System labels.ko="결제 코어"
+@aliases: ["Billing Engine"]
+@criticality: "high"
+
+첫 번째 화점: 결제 도메인 코어.
+모든 트랜잭션의 중심이 되는 개체의 선언. 코드 작성 전에 지식 그래프 영역을 확보한다.
+::
+
+:: entity id=ent:stripe type=System labels.ko="Stripe 연동"
+@aliases: ["Stripe integration"]
+
+두 번째 화점: 검증된 외부 인터페이스 확보.
+바둑에서 변을 차지하여 안정을 도모하듯, 신뢰할 수 있는 외부 시스템으로 진출 기반을 다진다.
+::
+
+:: rel id=rel:payment-uses-stripe type=depends_on from=@ent:payment to=@ent:stripe
+@confidence: 0.99
+
+결제 시스템은 Stripe API에 강하게 의존한다. 두 돌을 연결하는 '이음'.
+::
+
+:: schema id=sch:payment-entity
+@applies_to: {kind: "entity", type: "System"}
+@required_fields: ["criticality"]
+
+결제 도메인의 모든 시스템은 중요도(criticality)를 명시해야 한다.
+두터운 아키텍처를 위한 촘촘한 규칙망 설정.
+::
+
+%% ═══ Phase 2: 집세기 (Context) - L2 Token Optimization ═══
+:: context id=ctx:billing-architecture priority=critical depth=overview
+@summary: "Payment MVP uses Stripe integration with Next.js webhooks."
+
+[대국 중반의 형세 판단]
+현재 결제 시스템은 Stripe 정석을 사용하여 변을 단단히 굳혔으며,
+웹훅 기반의 비동기 처리로 중앙 서버의 부하를 줄이는 실리를 취했다.
+남은 과제는 예외 처리(에러 핸들링)의 두터움을 확보하는 것이다.
+::
+
+%% ═══ Phase 3: 정석 (Joseki) - L3 Action Templates ═══
+:: action id=act:stripe-joseki agent=code-gen trigger="payment_gateway_needed"
+@tool: "code_generator"
+@input: {
+  pattern: "stripe-checkout-webhook",
+  framework: "nextjs",
+  security_level: "production"
+}
+@output: "stripe_integration_files"
+@timeout: 60000
+
+수백 번 검증된 Stripe 연동 정석.
+웹훅 서명 검증과 멱등성 보장이 포함된 안전한 수. 무작정 짜는 대신 정석 라이브러리를 차용한다.
+::
+
+%% ═══ Phase 4: 선수/후수 (Sente/Gote) - L5 Pipeline Feedback ═══
+:: action id=act:payment-tests agent=test-runner trigger="pre_commit"
+@tool: "jest"
+@input: { target: "tests/payment/" }
+@output: "test_report.json"
+@timeout: 30000
+
+선수(Sente)를 잡기 위한 TDD 기반 테스트 실행. 장애 발생 전 미리 계약을 검증.
+::
+
+:: pipeline id=pipe:payment-deployment
+@goal: "zero_downtime_release"
+@criteria: ["test_pass_rate", "security_audit"]
+@interval: "on_commit"
+@max_iterations: 10
+@stages: [
+  {name: "test_sente", action: @act:payment-tests},
+  {name: "check_life_death", quantum: @qst:feature-health},
+  {name: "deploy", action: "deploy_to_staging"}
+]
+@feedback: {
+  positive: "proceed_to_prod",
+  negative: {adjust: {action: "rollback_and_fix"}},
+  stagnant: {escalate: "architect_review"}
+}
+
+선수를 유지하는 파이프라인. 테스트 실패시 즉각적으로 방어 모드(후수)로 전환하여 피해를 줄인다.
+::
+
+%% ═══ Phase 5: 사활 (Life & Death) - L4 Quantum States ═══
+:: quantum id=qst:feature-health
+@states: {alive: 0.0, uncertain: 1.0, dead: 0.0}
+@observe_on: "pipeline_check_life_death"
+@history: true
+@default: "uncertain"
+
+%% 관측 전 코드는 '살았는지 죽었는지 모르는' 불확실성(uncertain) 상태의 양자 중첩.
+%% 두 개의 '눈(eye)' — [1. 테스트 통과], [2. 정적 분석/스키마 검증 통과] — 이 확인되면 완생(alive)으로 붕괴.
+::
+
+%% ═══ Phase 6: 복기 (Review) - Proposed Kifu Kind ═══
+:: kifu id=kif:payment-sprint-day1 
+@board: @doc:payment-service
+@player: "alpha-squad"
+@result: "ongoing"
+@moves: [
+  {n: 1, type: "fuseki", target: "@ent:payment", intent: "결제 코어 도메인 설계", impact: "+structure"},
+  {n: 2, type: "joseki", target: "@act:stripe-joseki", intent: "Stripe 검증 정석 적용", impact: "++reliability"},
+  {n: 3, type: "sente", target: "@act:payment-tests", intent: "TDD 테스트 선작성으로 선수 획득", impact: "++confidence"}
+]
+
+결제 시스템 MVP 개발 1일차 복기(Review) 기록.
+최선의 수가 무엇이었는지, 왜 Stripe 정석을 채택했는지 결정의 궤적을 남긴다.
+::
