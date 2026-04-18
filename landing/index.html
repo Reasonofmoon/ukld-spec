@@ -49,11 +49,10 @@
   <script type="text/babel" data-presets="react" src="app-part3.jsx"></script>
 
   <script type="text/babel" data-presets="react">
-    const { useState, useEffect } = React;
-
     const TWEAK_DEFAULTS = { theme: 'light', defaultLevel: 1 };
 
     function App() {
+      const { useState, useEffect } = React;
       const stored = (() => {
         try { return JSON.parse(localStorage.getItem('ukdl-tweaks') || '{}'); }
         catch (e) { return {}; }
